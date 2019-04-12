@@ -17,8 +17,7 @@ module Danger
     def lint(commit = nil)
       files = pronto(commit)
       return if files.empty?
-
-      # markdown offenses_message(files)
+      markdown offenses_message(files)
     end
 
     private
@@ -29,8 +28,8 @@ module Danger
     def pronto(specified_commit = nil)
       commit = "origin/staging"
       commit = specified_commit if !specified_commit.nil?
-      pronto_output = `#{'bundle exec ' if File.exists?('Gemfile')}pronto run -f github github_status -c #{commit}`
-      # JSON.parse(pronto_output)
+      pronto_output = `#{'bundle exec ' if File.exists?('Gemfile')}pronto run -f json -c #{commit}`
+      JSON.parse(pronto_output.remove("Running Pronto::Haml\nRunning Pronto::Rubocop\n"))
     end
 
     # Builds the message
