@@ -29,7 +29,7 @@ module Danger
       commit = "origin/staging"
       commit = specified_commit if !specified_commit.nil?
       pronto_output = `#{'bundle exec ' if File.exists?('Gemfile')}pronto run -f json -c #{commit}`
-      JSON.parse(pronto_output.remove("Running Pronto::Haml\nRunning Pronto::Rubocop\n"))
+      JSON.parse(pronto_output.split("Running Pronto::Haml\nRunning Pronto::Rubocop\n")[1])
     end
 
     # Builds the message
