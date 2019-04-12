@@ -27,9 +27,9 @@ module Danger
     # @param commit [String] hash/branch/tag
     # @return [Hash] Converted hash from pronto json output
     def pronto(specified_commit = nil)
-      commit = "origin/master"
+      commit = "origin/staging"
       commit = specified_commit if !specified_commit.nil?
-      pronto_output = `#{'bundle exec ' if File.exists?('Gemfile')}pronto run -f json -c #{commit}`
+      pronto_output = `#{'bundle exec ' if File.exists?('Gemfile')}pronto run -f github github_status -c #{commit}`
       JSON.parse(pronto_output)
     end
 
