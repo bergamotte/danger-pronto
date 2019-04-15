@@ -17,7 +17,6 @@ module Danger
     def lint(commit = nil)
       files = pronto(commit)
       return if files.empty?
-
       markdown offenses_message(files)
     end
 
@@ -27,10 +26,13 @@ module Danger
     # @param commit [String] hash/branch/tag
     # @return [Hash] Converted hash from pronto json output
     def pronto(specified_commit = nil)
-      commit = "origin/master"
+      commit = "origin/staging"
       commit = specified_commit if !specified_commit.nil?
       pronto_output = `#{'bundle exec ' if File.exists?('Gemfile')}pronto run -f json -c #{commit}`
-      JSON.parse(pronto_output)
+
+      # regex to grab substring between 1st '[' and last ']' due to the fact pronto has other output alongside the json
+      # we add these chars back into the string
+      JSON.parse("[#{pronto_output.slice(/\[(.*)\]/,1)}]")
     end
 
     # Builds the message
