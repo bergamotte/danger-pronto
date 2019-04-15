@@ -29,7 +29,10 @@ module Danger
       commit = "origin/staging"
       commit = specified_commit if !specified_commit.nil?
       pronto_output = `#{'bundle exec ' if File.exists?('Gemfile')}pronto run -f json -c #{commit}`
-      JSON.parse(pronto_output.split("Running Pronto::Brakeman\nRunning Pronto::Haml\nRunning Pronto::Rubocop\n")[1])
+
+      # regex to grab substring between 1st '[' and last ']' due to the fact pronto has other output alongside the json
+      # we add these chars back into the string
+      JSON.parse("[#{pronto_output.slice(/\[(.*)\]/,1)}]")
     end
 
     # Builds the message
